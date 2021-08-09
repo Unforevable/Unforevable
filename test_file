@@ -31,7 +31,7 @@ def parse_file(path: str) -> list:
     return list_of_dicts
 
 def load_data(path: str):
-    """Loading file and getting the list of documents to process"""
+    """Loading file and getting the list of dictionaties/documents to process"""
     parsed_data = parse_file(path)
     for document in parsed_data:
 
