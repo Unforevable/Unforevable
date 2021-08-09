@@ -1,0 +1,40 @@
+import gzip
+from typing import List, Dict
+
+def if_gzip(path):
+    """Checking if file is .gz"""
+    return path.endswith(".gz")
+
+def parse_file(path: str) -> list:
+    """Parsing file to return the list of all documents"""
+    list_of_dicts: List[dict] = []
+    dict_of_docs: Dict[str, str] = {}
+    open_func = gzip.open if if_gzip(path) else open
+    with open_func(path, 'rt') as stream:
+        read_file = stream.read()
+        read_file_list = read_file.split('\n')
+        for line in read_file_list:
+            if not line.startswith('#'):
+                if not line.startswith(' '):
+                    if line == '':
+                        list_of_dicts.append(dict_of_docs)
+                        dict_of_docs = {}
+                    else:
+                        key = line.split(': ', 1)[0]
+                        value = line.split(': ', 1)[1]
+                        if key in dict_of_docs:
+                            dict_of_docs[key] = dict_of_docs[key] + '\n' + value.strip()
+                        if key not in dict_of_docs:
+                            dict_of_docs.update({key: value.strip()})
+                else:
+                    dict_of_docs[key] = dict_of_docs[key] + '\n' + line.lstrip()
+    return list_of_dicts
+
+def load_data(path: str):
+    """Loading file and getting the list of documents to process"""
+    parsed_data = parse_file(path)
+    for document in parsed_data:
+
+        ...
+
+        # load document to database (or do something else)
