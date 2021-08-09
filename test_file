@@ -1,7 +1,7 @@
 import gzip
 from typing import List, Dict
 
-def if_gzip(path):
+def if_gzip(path: str) -> bool:
     """Checking if file is .gz"""
     return path.endswith(".gz")
 
