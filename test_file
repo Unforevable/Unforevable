@@ -1,13 +1,12 @@
 import gzip
-from typing import List, Dict
+from typing import Dict, Generator
 
 def if_gzip(path: str) -> bool:
     """Checking if file is .gz"""
     return path.endswith(".gz")
 
-def parse_file(path: str) -> list:
-    """Parsing file line by line (to not keep whole file in RAM) to return the list of all documents"""
-    list_of_dicts: List[dict] = []
+def parse_file(path: str) -> Generator[dict, None, None]:
+    """Generating dictionaries with document"""
     dict_of_docs: Dict[str, str] = {}
     open_func = gzip.open if if_gzip(path) else open
     with open_func(path, 'rt') as stream:
@@ -15,7 +14,7 @@ def parse_file(path: str) -> list:
             if not line.startswith('#'):
                 if not line.startswith(' '):
                     if line in ['\n', '\r\n']:
-                        list_of_dicts.append(dict_of_docs)
+                        yield dict_of_docs
                         dict_of_docs = {}
                     else:
                         key = line.split(': ', 1)[0]
@@ -26,7 +25,6 @@ def parse_file(path: str) -> list:
                             dict_of_docs.update({key: value.strip()})
                 else:
                     dict_of_docs[key] = dict_of_docs[key] + '\n' + line.strip()
-    return list_of_dicts
 
 def load_data(path: str):
     """Loading file and getting the list of dictionaties/documents to process"""
