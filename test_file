@@ -27,7 +27,7 @@ def parse_file(path: str) -> Generator[dict, None, None]:
                     dict_of_docs[key] = dict_of_docs[key] + '\n' + line.strip()
 
 def load_data(path: str):
-    """Loading file and getting the list of dictionaties/documents to process"""
+    """Loading file and getting dictionaries/documents to process"""
     parsed_data = parse_file(path)
     for document in parsed_data:
 
